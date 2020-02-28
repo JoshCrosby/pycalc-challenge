@@ -3,6 +3,11 @@ Calculate the tip amount from a restaurant bill
 '''
 
 
+class TipError(Exception):
+    '''generic exception for the class'''
+    # pass
+
+
 class Bill:
     '''class for restaurant bill'''
     def __init__(self, bill_amount, tip_percent):
@@ -17,9 +22,9 @@ class Bill:
 
     def __str__(self):
         '''return a pretty version :) '''
-        return (f'Bill amount: $ {self.bill_amount}'
-                f'Tip percentage: {self.tip_percentage} %'
-                f'Total bill: $ {self.calc_tip}')
+        return (f'Bill amount: $ {self.bill_amount} '
+                f'Tip percentage: {self.tip_percent} % '
+                f'Total bill: $ {self.calc_tip()}')
 
     def calc_tip(self):
         '''
@@ -32,8 +37,9 @@ class Bill:
         Output:
         Total bill - assumption tax is calculated, tip + bill amount
         '''
-        return (self.bill_amount * (1.0 * self.tip_percent / 100))
-
-    def valid_tip(self):
-        '''return a valid tip above 0. No $, strings, or negative'''
-        pass
+        try:
+            if isinstance(self.bill_amount,
+                          (int, float)) and isinstance(self.tip_percent, int):
+                return self.bill_amount * (1.0 * self.tip_percent / 100)
+        except ValueError as e:
+            raise TipError(e.__cause__)

@@ -9,7 +9,14 @@ class TestBill:
         bill = Bill(100.00, 20)
         assert bill.calc_tip() == 20
 
-    def test_neg20p_of_100_reprompts(self):
-        '''can't have a negative tip'''
-        bill = Bill(100.00, -20)
-        assert bill.valid_tip == False
+    def test_twenty_of_100_is_not_numeric(self):
+        '''twenty * 100 is not numeric'''
+        with pytest.raises(Exception) as e:
+            bill = Bill(100.00, "twenty")
+            assert bill.calc_tip()
+
+    def test_tip_is_positive(self):
+        '''make sure our tip is > 0'''
+        with pytest.raises(Exception) as e:
+            bill = Bill(100.00, -10)
+            assert bill.calc_tip()
